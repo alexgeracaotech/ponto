@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, serverTimestamp, connectFirestoreEmulator } from 'firebase/firestore';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, serverTimestamp } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 import { Platform } from 'react-native';
 
 const firebaseConfig = {
@@ -28,16 +28,24 @@ export const db = getFirestore(app);
 export const firestore = getFirestore(app);
 export const auth = getAuth(app);
 
-// Configure auth for web (persistence)
+// Configure auth for web (persistence) - optional for Snack compatibility
 if (Platform.OS === 'web') {
-  // Enable persistence for web
-  import('firebase/auth').then(({ setPersistence, browserLocalPersistence }) => {
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
-      console.warn('Could not set auth persistence:', error);
+  try {
+    // Dynamic import for web persistence (optional)
+    import('firebase/auth').then(({ setPersistence, browserLocalPersistence }) => {
+      if (setPersistence && browserLocalPersistence) {
+        setPersistence(auth, browserLocalPersistence).catch((error) => {
+          console.warn('Could not set auth persistence:', error);
+        });
+      }
+    }).catch((error) => {
+      // Silently fail if persistence is not available (common in Snack)
+      console.warn('Auth persistence not available:', error);
     });
-  }).catch((error) => {
-    console.warn('Could not import auth persistence:', error);
-  });
+  } catch (error) {
+    // Ignore errors in Snack environment
+    console.warn('Auth persistence setup skipped');
+  }
 }
 
 // ServerTimestamp helper function

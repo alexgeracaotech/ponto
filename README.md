@@ -1,11 +1,58 @@
-# Sample Snack app
+# Ponto Estagiário
 
-Open the `App.js` file to start writing some code. You can preview the changes directly on your phone or tablet by scanning the **QR code** or use the iOS or Android emulators. When you're done, click **Save** and share the link!
+Aplicativo de controle de ponto para estagiários desenvolvido com React Native e Expo.
 
-When you're ready to see everything that Expo provides (or if you want to use your own editor) you can **Download** your project and use it with [expo cli](https://docs.expo.dev/get-started/installation/#expo-cli)).
+## 🚀 Como usar no Expo Snack
 
-All projects created in Snack are publicly available, so you can easily share the link to this project via link, or embed it on a web page with the `<>` button.
+Este projeto foi configurado para funcionar perfeitamente no Expo Snack. Para importar e usar:
 
-If you're having problems, you can tweet to us [@expo](https://twitter.com/expo) or ask in our [forums](https://forums.expo.dev/c/expo-dev-tools/61) or [Discord](https://chat.expo.dev/).
+1. Acesse [snack.expo.dev](https://snack.expo.dev)
+2. Clique em **"Import from GitHub"** ou **"Import from URL"**
+3. Cole a URL do repositório GitHub deste projeto
+4. O projeto será importado automaticamente com todas as dependências configuradas
 
-Snack is Open Source. You can find the code on the [GitHub repo](https://github.com/expo/snack).
+## 📋 Requisitos
+
+- Conta no Expo (gratuita)
+- Acesso ao Firebase (configurado no projeto)
+
+## 🛠️ Tecnologias Utilizadas
+
+- **React Native** 0.74.5
+- **Expo SDK** 51
+- **React** 18.2.0
+- **Firebase** 10.13.0
+
+## 📱 Funcionalidades
+
+- Autenticação de usuários
+- Registro de ponto (entrada/saída)
+- Histórico de pontos
+- Estatísticas e relatórios
+- Perfil do usuário
+- Configurações
+
+## 🔧 Configuração Local (Opcional)
+
+Se preferir rodar localmente:
+
+```bash
+# Instalar dependências
+npm install
+
+# Iniciar o projeto
+npm start
+```
+
+## 📝 Notas
+
+- O projeto está configurado para funcionar no Expo Snack sem necessidade de módulos nativos adicionais
+- Todas as dependências são compatíveis com Expo Managed Workflow
+- O Firebase está configurado e pronto para uso
+
+## 🆘 Suporte
+
+Se encontrar problemas, verifique:
+- Se todas as dependências foram instaladas corretamente
+- Se o Firebase está configurado corretamente
+- Se está usando uma versão compatível do Expo Go no dispositivo
