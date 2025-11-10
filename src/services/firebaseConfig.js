@@ -1,6 +1,9 @@
+// Import Firebase core and services
+// The order matters: app first, then services
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
+
 import { Platform } from 'react-native';
 
 const firebaseConfig = {
@@ -13,31 +16,33 @@ const firebaseConfig = {
   measurementId: "G-NM4HKFL8F1"
 };
 
-// Initialize Firebase only if it hasn't been initialized
-if (!firebase.apps.length) {
+// Initialize Firebase
+if (!firebase.apps || firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig);
-  console.log('Firebase initialized successfully');
-} else {
-  console.log('Using existing Firebase app instance');
 }
 
-// Initialize services
-export const db = firebase.firestore();
-export const firestore = firebase.firestore();
-export const auth = firebase.auth();
+// Get the default app instance
+const app = firebase.app();
 
-// Configure auth for web (persistence) - optional for Snack compatibility
+// Initialize services - these are now available after the imports
+const db = app.firestore();
+const firestore = app.firestore();
+const auth = app.auth();
+
+// Configure auth for web (persistence)
 if (Platform.OS === 'web') {
   try {
     // Firebase v8 automatically uses browserLocalPersistence on web
-    // No need for explicit setPersistence in v8
   } catch (error) {
-    console.warn('Auth persistence setup skipped');
+    console.warn('Auth persistence setup skipped:', error);
   }
 }
 
 // ServerTimestamp helper function
 export const ServerTimestamp = () => firebase.firestore.FieldValue.serverTimestamp();
 
-// Export app for potential future use
+// Export services
+export { db, firestore, auth };
+
+// Export app
 export default firebase;
