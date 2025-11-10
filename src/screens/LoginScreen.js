@@ -4,7 +4,6 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import { auth } from '../services/firebaseConfig';
 import { getUserDocument } from '../services/userService';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
 const LoginScreen = ({ navigate }) => {
   const [email, setEmail] = useState('');
@@ -32,7 +31,7 @@ const LoginScreen = ({ navigate }) => {
 
       // Step 1: Authenticate user with Firebase Auth
       console.log('Passo 1: Autenticando usuário no Firebase Auth...');
-      const userCredential = await signInWithEmailAndPassword(auth, email.trim().toLowerCase(), password);
+      const userCredential = await auth.signInWithEmailAndPassword(email.trim().toLowerCase(), password);
       const user = userCredential.user;
       console.log('✅ Usuário autenticado com sucesso!');
       console.log('UID:', user.uid);
@@ -47,7 +46,7 @@ const LoginScreen = ({ navigate }) => {
       if (!userData) {
         console.error('❌ ERRO: Usuário não encontrado no Firestore!');
         console.log('O usuário foi autenticado no Firebase Auth, mas não existe documento no Firestore.');
-        await signOut(auth);
+        await auth.signOut();
         Alert.alert(
           'Login Não Realizado',
           'Usuário não encontrado no banco de dados. Por favor, verifique suas credenciais ou registre-se novamente.',
@@ -75,7 +74,7 @@ const LoginScreen = ({ navigate }) => {
       console.log('Passo 4: Verificando se a conta está ativa...');
       if (userData.isActive === false) {
         console.error('❌ ERRO: Conta desativada!');
-        await signOut(auth);
+        await auth.signOut();
         Alert.alert(
           'Login Não Realizado',
           'Sua conta foi desativada. Entre em contato com o suporte.'
@@ -89,7 +88,7 @@ const LoginScreen = ({ navigate }) => {
       console.log('Passo 5: Verificando correspondência de email...');
       if (userData.email && userData.email.toLowerCase() !== email.trim().toLowerCase()) {
         console.error('❌ ERRO: Email não corresponde!');
-        await signOut(auth);
+        await auth.signOut();
         Alert.alert(
           'Login Não Realizado',
           'Os dados não correspondem ao banco de dados. Verifique suas credenciais.'

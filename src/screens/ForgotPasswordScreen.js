@@ -3,7 +3,6 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Aler
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import { auth } from '../services/firebaseConfig';
-import { sendPasswordResetEmail } from 'firebase/auth';
 
 const ForgotPasswordScreen = ({ navigate }) => {
   const [email, setEmail] = useState('');
@@ -16,7 +15,7 @@ const ForgotPasswordScreen = ({ navigate }) => {
 
     try {
       setLoading(true);
-      await sendPasswordResetEmail(auth, email.trim());
+      await auth.sendPasswordResetEmail(email.trim());
       Alert.alert(
         'Sucesso',
         'Um e-mail de redefinição de senha foi enviado. Verifique sua caixa de entrada.',

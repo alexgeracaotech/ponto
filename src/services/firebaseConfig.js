@@ -1,6 +1,6 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, serverTimestamp } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
 import { Platform } from 'react-native';
 
 const firebaseConfig = {
@@ -14,42 +14,30 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase only if it hasn't been initialized
-let app;
-if (getApps().length === 0) {
-  app = initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
   console.log('Firebase initialized successfully');
 } else {
-  app = getApps()[0];
   console.log('Using existing Firebase app instance');
 }
 
 // Initialize services
-export const db = getFirestore(app);
-export const firestore = getFirestore(app);
-export const auth = getAuth(app);
+export const db = firebase.firestore();
+export const firestore = firebase.firestore();
+export const auth = firebase.auth();
 
 // Configure auth for web (persistence) - optional for Snack compatibility
 if (Platform.OS === 'web') {
   try {
-    // Dynamic import for web persistence (optional)
-    import('firebase/auth').then(({ setPersistence, browserLocalPersistence }) => {
-      if (setPersistence && browserLocalPersistence) {
-        setPersistence(auth, browserLocalPersistence).catch((error) => {
-          console.warn('Could not set auth persistence:', error);
-        });
-      }
-    }).catch((error) => {
-      // Silently fail if persistence is not available (common in Snack)
-      console.warn('Auth persistence not available:', error);
-    });
+    // Firebase v8 automatically uses browserLocalPersistence on web
+    // No need for explicit setPersistence in v8
   } catch (error) {
-    // Ignore errors in Snack environment
     console.warn('Auth persistence setup skipped');
   }
 }
 
 // ServerTimestamp helper function
-export const ServerTimestamp = () => serverTimestamp();
+export const ServerTimestamp = () => firebase.firestore.FieldValue.serverTimestamp();
 
 // Export app for potential future use
-export default app;
+export default firebase;

@@ -5,7 +5,6 @@ import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import AppHeader from '../components/AppHeader';
 import { auth, firestore } from '../services/firebaseConfig';
-import { collection, getDocs, query, orderBy, limit, where } from 'firebase/firestore';
 import { getPunchesGroupedByDay } from '../services/statisticsService';
 
 const NotificationsScreen = ({ navigate }) => {
@@ -84,9 +83,9 @@ const NotificationsScreen = ({ navigate }) => {
 
             // Check for recent justifications
             try {
-                const justificationsRef = collection(firestore, 'users', user.uid, 'justifications');
-                const q = query(justificationsRef, orderBy('createdAt', 'desc'), limit(3));
-                const snapshot = await getDocs(q);
+                const justificationsRef = firestore.collection('users').doc(user.uid).collection('justifications');
+                const q = justificationsRef.orderBy('createdAt', 'desc').limit(3);
+                const snapshot = await q.get();
                 
                 snapshot.forEach((doc) => {
                     const data = doc.data();

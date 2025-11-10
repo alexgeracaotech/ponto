@@ -21,7 +21,7 @@ Este projeto foi configurado para funcionar perfeitamente no Expo Snack. Para im
 - **React Native** 0.74.5
 - **Expo SDK** 51
 - **React** 18.2.0
-- **Firebase** 10.13.0
+- **Firebase** 8.10.0
 
 ## 📱 Funcionalidades
 

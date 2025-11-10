@@ -3,7 +3,6 @@
  */
 
 import { auth, firestore } from '../services/firebaseConfig';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 
 /**
  * Test Firebase connection
@@ -14,8 +13,8 @@ export const testFirebaseConnection = async () => {
     
     // Test Firestore connection
     console.log('Testing Firestore connection...');
-    const testRef = collection(firestore, 'users');
-    const snapshot = await getDocs(testRef);
+    const testRef = firestore.collection('users');
+    const snapshot = await testRef.get();
     console.log('Firestore connection: OK');
     console.log('Total users in database:', snapshot.size);
     
@@ -48,8 +47,8 @@ export const testFirebaseConnection = async () => {
 export const listAllUsers = async () => {
   try {
     console.log('=== Listing All Users ===');
-    const usersRef = collection(firestore, 'users');
-    const snapshot = await getDocs(usersRef);
+    const usersRef = firestore.collection('users');
+    const snapshot = await usersRef.get();
     
     const users = [];
     snapshot.forEach((doc) => {

@@ -3,7 +3,6 @@
  */
 
 import { auth, firestore } from './firebaseConfig';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
 
 /**
  * Calculates worked hours for a given day
@@ -17,8 +16,8 @@ export const calculateDayHours = (dayPunches) => {
 
   // Sort punches by time
   const sortedPunches = [...dayPunches].sort((a, b) => {
-    const timeA = a.timestamp instanceof Date ? a.timestamp : new Date(a.timestamp);
-    const timeB = b.timestamp instanceof Date ? b.timestamp : new Date(b.timestamp);
+    const timeA = a.timestamp instanceof Date ? a.timestamp : (a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp));
+    const timeB = b.timestamp instanceof Date ? b.timestamp : (b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp));
     return timeA - timeB;
   });
 
@@ -40,10 +39,10 @@ export const calculateDayHours = (dayPunches) => {
   for (let i = 0; i < Math.min(entries.length, exits.length); i++) {
     const entryTime = entries[i].timestamp instanceof Date 
       ? entries[i].timestamp 
-      : new Date(entries[i].timestamp);
+      : (entries[i].timestamp?.toDate ? entries[i].timestamp.toDate() : new Date(entries[i].timestamp));
     const exitTime = exits[i].timestamp instanceof Date 
       ? exits[i].timestamp 
-      : new Date(exits[i].timestamp);
+      : (exits[i].timestamp?.toDate ? exits[i].timestamp.toDate() : new Date(exits[i].timestamp));
     
     const diffMs = exitTime - entryTime;
     const diffMinutes = Math.floor(diffMs / (1000 * 60));
@@ -71,14 +70,14 @@ export const getPunchesGroupedByDay = async () => {
     const user = auth.currentUser;
     if (!user) return {};
 
-    const punchesRef = collection(firestore, 'users', user.uid, 'punches');
+    const punchesRef = firestore.collection('users').doc(user.uid).collection('punches');
     let querySnapshot;
     
     try {
-      const q = query(punchesRef, orderBy('timestamp', 'desc'));
-      querySnapshot = await getDocs(q);
+      const q = punchesRef.orderBy('timestamp', 'desc');
+      querySnapshot = await q.get();
     } catch (error) {
-      querySnapshot = await getDocs(punchesRef);
+      querySnapshot = await punchesRef.get();
     }
 
     const grouped = {};
@@ -86,7 +85,7 @@ export const getPunchesGroupedByDay = async () => {
       const data = doc.data();
       const timestamp = data.timestamp?.toDate 
         ? data.timestamp.toDate() 
-        : new Date(data.timestamp || data.createdAt?.toDate || data.createdAt);
+        : new Date(data.timestamp || (data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt));
       
       const dateKey = timestamp.toLocaleDateString('pt-BR', {
         day: '2-digit',
@@ -130,8 +129,8 @@ export const getJustifications = async () => {
     const user = auth.currentUser;
     if (!user) return [];
 
-    const justificationsRef = collection(firestore, 'users', user.uid, 'justifications');
-    const querySnapshot = await getDocs(justificationsRef);
+    const justificationsRef = firestore.collection('users').doc(user.uid).collection('justifications');
+    const querySnapshot = await justificationsRef.get();
 
     const justifications = [];
     querySnapshot.forEach((doc) => {
@@ -140,7 +139,7 @@ export const getJustifications = async () => {
         id: doc.id,
         date: data.date,
         text: data.text,
-        createdAt: data.createdAt?.toDate || new Date(data.createdAt),
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt),
       });
     });
 
@@ -252,4 +251,3 @@ export const getCurrentMonthStatistics = async () => {
   const now = new Date();
   return await getMonthlyStatistics(now.getMonth() + 1, now.getFullYear());
 };
-

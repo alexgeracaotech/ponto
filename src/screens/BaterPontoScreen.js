@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { COLORS } from '../constants/colors';
 import { firestore, auth, ServerTimestamp } from '../services/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
 
 const BaterPontoScreen = ({ navigate }) => {
   const [status, setStatus] = useState('FORA'); // FORA | DENTRO | INTERVALO
@@ -20,8 +19,8 @@ const BaterPontoScreen = ({ navigate }) => {
       }
 
       // Salva o batimento de ponto no Firestore
-      const punchesRef = collection(firestore, 'users', user.uid, 'punches');
-      await addDoc(punchesRef, {
+      const punchesRef = firestore.collection('users').doc(user.uid).collection('punches');
+      await punchesRef.add({
         timestamp: ServerTimestamp(), // Salva o timestamp no Firestore
         time: timeString, // Hora do ponto
         createdAt: ServerTimestamp(), // Hora de criação

@@ -8,7 +8,6 @@ import { COLORS } from '../constants/colors';
 import AppHeader from '../components/AppHeader';
 import AppFooter from '../components/AppFooter';
 import { auth } from '../services/firebaseConfig';
-import { signOut } from 'firebase/auth';
 import { getCurrentUserData } from '../services/userService';
 
 const ProfileScreen = ({ navigate }) => {
@@ -16,7 +15,7 @@ const ProfileScreen = ({ navigate }) => {
   const [loading, setLoading] = useState(true);
   const handleLogout = useCallback(async () => {
     try {
-      await signOut(auth);
+      await auth.signOut();
       navigate('Login');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);

@@ -5,7 +5,6 @@ import { COLORS } from '../constants/colors';
 import AppHeader from '../components/AppHeader';
 import AppFooter from '../components/AppFooter';
 import { auth, firestore, ServerTimestamp } from '../services/firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
 import { getPunchesGroupedByDay } from '../services/statisticsService';
 
 const HomeScreen = ({ navigate }) => {
@@ -100,8 +99,8 @@ const HomeScreen = ({ navigate }) => {
       console.log('Usuário autenticado:', user.uid); // Log do UID do usuário
 
       // Salva o "batimento de ponto" no Firestore
-      const punchesRef = collection(firestore, 'users', user.uid, 'punches');
-      const docRef = await addDoc(punchesRef, {
+      const punchesRef = firestore.collection('users').doc(user.uid).collection('punches');
+      const docRef = await punchesRef.add({
         timestamp: ServerTimestamp(), // Salva o timestamp no Firestore
         time: timeString, // Hora do ponto
         createdAt: ServerTimestamp(), // Hora de criação

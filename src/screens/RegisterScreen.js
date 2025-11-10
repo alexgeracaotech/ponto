@@ -7,7 +7,6 @@ import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import { auth } from '../services/firebaseConfig';
 import { createUserDocument, verifyUserDocumentExists } from '../services/userService';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 const RegisterScreen = ({ navigate }) => {
   const [gender, setGender] = useState('Masculino');
@@ -127,7 +126,7 @@ const RegisterScreen = ({ navigate }) => {
       
       // Step 1: Create user in Firebase Authentication
       console.log('Creating user in Firebase Auth...');
-      const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), password);
+      const userCredential = await auth.createUserWithEmailAndPassword(email.trim(), password);
       const user = userCredential.user;
       console.log('User created in Auth:', user.uid);
 
@@ -162,7 +161,7 @@ const RegisterScreen = ({ navigate }) => {
 
       // Step 4: Update user profile in Auth (optional but good practice)
       try {
-        await updateProfile(user, {
+        await user.updateProfile({
           displayName: username.trim(),
         });
         console.log('User profile updated in Auth');

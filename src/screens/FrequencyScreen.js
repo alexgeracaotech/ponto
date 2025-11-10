@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView, Mod
 import { Feather } from '@expo/vector-icons';
 import { COLORS } from '../constants/colors';
 import { auth, firestore, ServerTimestamp } from '../services/firebaseConfig';
-import { collection, getDocs, query, orderBy, limit, addDoc } from 'firebase/firestore';
 
 const FrequencyScreen = ({ navigate }) => {
   const [punches, setPunches] = useState([]);
@@ -22,15 +21,15 @@ const FrequencyScreen = ({ navigate }) => {
       if (!user) return;
 
       setLoadingPunches(true);
-      const punchesRef = collection(firestore, 'users', user.uid, 'punches');
+      const punchesRef = firestore.collection('users').doc(user.uid).collection('punches');
       
       let querySnapshot;
       try {
-        const q = query(punchesRef, orderBy('timestamp', 'desc'), limit(100));
-        querySnapshot = await getDocs(q);
+        const q = punchesRef.orderBy('timestamp', 'desc').limit(100);
+        querySnapshot = await q.get();
       } catch (orderError) {
         console.warn('Erro ao ordenar por timestamp, buscando sem ordenação:', orderError);
-        querySnapshot = await getDocs(punchesRef);
+        querySnapshot = await punchesRef.get();
       }
       
       const punchesList = [];
@@ -179,8 +178,8 @@ const FrequencyScreen = ({ navigate }) => {
       const dateObj = new Date(year, month - 1, day);
 
       // Salva a justificativa no Firestore
-      const justificationsRef = collection(firestore, 'users', user.uid, 'justifications');
-      await addDoc(justificationsRef, {
+      const justificationsRef = firestore.collection('users').doc(user.uid).collection('justifications');
+      await justificationsRef.add({
         date: justificationDate,
         dateTimestamp: dateObj,
         text: justificationText.trim(),
