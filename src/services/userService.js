@@ -1,5 +1,5 @@
 import { auth, firestore } from './firebaseConfig';
-import firebase from 'firebase/app';
+import firebase from './firebaseConfig';
 
 /**
  * Service for user-related database operations

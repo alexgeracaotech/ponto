@@ -220,8 +220,8 @@ const RegisterScreen = ({ navigate }) => {
       // If user was created in Auth but Firestore save failed, delete the Auth user
       if (shouldDeleteUser && auth.currentUser) {
         try {
-          const { deleteUser } = await import('firebase/auth');
-          await deleteUser(auth.currentUser);
+          // Firebase v8: delete user directly
+          await auth.currentUser.delete();
           console.log('Deleted Auth user due to Firestore error');
         } catch (deleteError) {
           console.error('Error deleting Auth user:', deleteError);
