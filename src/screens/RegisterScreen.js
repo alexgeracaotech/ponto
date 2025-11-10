@@ -463,9 +463,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1, borderBottomColor: COLORS.gray,
     color: COLORS.white, paddingVertical: 15, fontSize: 16, marginBottom: 20
   },
-  rowBetween: {
-    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'
-  },
   buttonPrimary: {
     backgroundColor: COLORS.primary, borderRadius: 30,
     paddingVertical: 18, alignItems: 'center', marginBottom: 15

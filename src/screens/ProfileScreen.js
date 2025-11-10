@@ -193,11 +193,6 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: 'bold',
   },
-  profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
   loadingContainer: {
     padding: 40,
     alignItems: 'center',

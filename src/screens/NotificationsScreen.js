@@ -14,6 +14,7 @@ const NotificationsScreen = ({ navigate }) => {
 
     useEffect(() => {
         loadNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const loadNotifications = async () => {

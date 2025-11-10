@@ -56,22 +56,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: COLORS.white,
   },
-  notificationBadge: {
-      position: 'absolute',
-      right: -5,
-      top: -5,
-      backgroundColor: COLORS.red,
-      borderRadius: 10,
-      width: 18,
-      height: 18,
-      justifyContent: 'center',
-      alignItems: 'center'
-  },
-  notificationText: {
-      color: 'white',
-      fontSize: 12,
-      fontWeight: 'bold',
-  },
 });
 
 export default AppHeader;
